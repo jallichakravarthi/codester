@@ -102,23 +102,25 @@
 
 .topic-buttons-wrapper {
     flex: 1;
-    overflow: hidden;
+    overflow-x: auto;
     position: relative;
     height: 100%;
     padding: 0 40px;
+    scrollbar-width: none; 
 }
 
-
+.topic-buttons-wrapper::-webkit-scrollbar {
+    display: none; 
+}
 
 .topic-buttons {
     display: flex;
     transition: transform 0.3s ease;
-    width: calc(100% - 40px);
     gap: 15px;
 }
 
 .topic-button {
-    flex: 0 0 238.75px;
+    flex: 0 0 30%; 
     height: 220px;
     background-size: cover;
     background-position: center;
@@ -135,8 +137,6 @@
     padding: 10px;
     margin: 0;
 }
-
-
 
 .prev, .next {
     background-color: #333;
@@ -217,7 +217,7 @@
 <a href="https://www.tutorialspoint.com/servlets/servlets_tutorial.pdf" class="topic-button" style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSgMiE7nAvz6aClGFO7ly_JshmU37O6wy90Vg&s');" data-topic="Working With Servlet"><span>Working With SERVLET</span></a>
 
 <a href="https://www.tutorialspoint.com/jsp/jsp_tutorial.pdf" class="topic-button" style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnmrc-q9gc-zvF1O3cf2-v52utsizfYWhioA&s');" data-topic="JAVA ServerPages"><span>JAVA ServerPages</span></a>
-            <!-- Add more topic buttons as needed -->
+            
         </div>
 </div>
         <button class="next" onclick="move(1)">&#9654;</button>
@@ -235,84 +235,98 @@
        <script>
 
     let currentIndex = 0;
-    const itemsVisible = 4; 
-    const itemWidth = 238.75; 
+let itemsVisible = 4;
+let itemWidth = 238.75;
 
-    function searchMaterials() {
-        const query = document.getElementById('searchBar').value.toLowerCase();
-        const buttons = document.querySelectorAll('.topic-button');
-        
-        let anyVisible = false;
+function calculateVisibleItems() {
+    const container = document.getElementById('topicButtons');
+    const containerWidth = document.querySelector('.topic-buttons-wrapper').clientWidth;
 
-        buttons.forEach(button => {
-            
-            const topic = button.getAttribute('data-topic').toLowerCase();
-           
-            if (query === '' || topic.includes(query)) {
-                button.style.display = 'block'; // Show button
-                anyVisible = true;
-            } else {
-                button.style.display = 'none'; // Hide button
-            }
-        });
-
-        const noResultsMessage = document.querySelector('.no-results');
-        if (anyVisible) {
-            noResultsMessage.style.display = 'none';
-        } else {
-            noResultsMessage.style.display = 'block';
-        }
-
-        updateCarousel();
-    }
-
-    function move(direction) {
-        const container = document.getElementById('topicButtons');
-        const totalItems = container.children.length;
-        const maxIndex = Math.max(0, totalItems - itemsVisible);
-        
-        currentIndex = Math.max(0, Math.min(maxIndex, currentIndex + direction));
-        
-        container.style.transform = `translateX(-${currentIndex * itemWidth}px)`;
-        
-        updateNavigationButtons();
-    }
-
-    function updateCarousel() {
-        const container = document.getElementById('topicButtons');
-        const totalItems = container.children.length;
-        const maxIndex = Math.max(0, totalItems - itemsVisible);
-        
-        if (currentIndex > maxIndex) {
-            currentIndex = maxIndex;
-        }
-
-        container.style.transform = `translateX(-${currentIndex * itemWidth}px)`;
-        updateNavigationButtons();
-    }
-
-    function updateNavigationButtons() {
-        const container = document.getElementById('topicButtons');
-        const totalItems = container.children.length;
-        const maxIndex = Math.max(0, totalItems - itemsVisible);
-        
-        document.querySelector('.prev').disabled = currentIndex === 0;
-       
-        document.querySelector('.next').disabled = currentIndex === maxIndex;
-    }
-
-    document.querySelector('.prev').addEventListener('click', () => move(-1));
-    document.querySelector('.next').addEventListener('click', () => move(1));
-
+    // Calculate the width of each item
+    itemWidth = container.children.length > 0 ? container.children[0].clientWidth : itemWidth;
     
-    document.getElementById('searchBar').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            e.preventDefault(); // Prevent default form submission if inside a form
-            searchMaterials();
+    // Calculate how many items can be fully visible in the container
+    itemsVisible = Math.floor(containerWidth / itemWidth);
+}
+
+function searchMaterials() {
+    const query = document.getElementById('searchBar').value.toLowerCase();
+    const buttons = document.querySelectorAll('.topic-button');
+    
+    let anyVisible = false;
+
+    buttons.forEach(button => {
+        const topic = button.getAttribute('data-topic').toLowerCase();
+        if (query === '' || topic.includes(query)) {
+            button.style.display = 'block'; // Show button
+            anyVisible = true;
+        } else {
+            button.style.display = 'none'; // Hide button
         }
     });
 
-    updateCarousel();
+    const noResultsMessage = document.querySelector('.no-results');
+    if (anyVisible) {
+        noResultsMessage.style.display = 'none';
+    } else {
+        noResultsMessage.style.display = 'block';
+    }
+
+    updateCarousel(); // Update carousel to reflect visible items after search
+}
+
+function move(direction) {
+    const container = document.getElementById('topicButtons');
+    const visibleItems = Array.from(container.children).filter(item => item.style.display !== 'none');
+    const totalItems = visibleItems.length;
+    const maxIndex = Math.max(0, totalItems - itemsVisible);
+
+    currentIndex = Math.max(0, Math.min(maxIndex, currentIndex + direction));
+    
+    container.style.transform = `translateX(-${currentIndex * itemWidth}px)`;
+    
+    updateNavigationButtons();
+}
+
+function updateCarousel() {
+    calculateVisibleItems(); // Recalculate visible items on update
+    
+    const container = document.getElementById('topicButtons');
+    const visibleItems = Array.from(container.children).filter(item => item.style.display !== 'none');
+    const totalItems = visibleItems.length;
+    const maxIndex = Math.max(0, totalItems - itemsVisible);
+    
+    if (currentIndex > maxIndex) {
+        currentIndex = maxIndex;
+    }
+
+    container.style.transform = `translateX(-${currentIndex * itemWidth}px)`;
+    updateNavigationButtons();
+}
+
+function updateNavigationButtons() {
+    const container = document.getElementById('topicButtons');
+    const visibleItems = Array.from(container.children).filter(item => item.style.display !== 'none');
+    const totalItems = visibleItems.length;
+    const maxIndex = Math.max(0, totalItems - itemsVisible);
+    
+    document.querySelector('.prev').disabled = currentIndex === 0;
+    document.querySelector('.next').disabled = currentIndex === maxIndex;
+}
+
+document.querySelector('.prev').addEventListener('click', () => move(-1));
+document.querySelector('.next').addEventListener('click', () => move(1));
+
+document.getElementById('searchBar').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        e.preventDefault(); // Prevent default form submission if inside a form
+        searchMaterials();
+    }
+});
+
+window.addEventListener('resize', updateCarousel); // Recalculate when the window is resized
+
+updateCarousel(); // Initial update
 
 </script>
 
