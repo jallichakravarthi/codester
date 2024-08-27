@@ -7,12 +7,12 @@
     <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/10728/10728636.png" type="image/png">
 
     <style>
-        body {
+       body {
     margin: 0;
     font-family: Arial, sans-serif;
     background: url('background.jpg') no-repeat center center fixed;
     background-size: cover;
-    overflow: hidden;
+    overflow-x: hidden; /* This will only hide horizontal overflow */
 }
 
 .blurred-background {
@@ -25,6 +25,7 @@
     background-size: cover;
     filter: blur(8px);
     z-index: -1;
+    pointer-events: none; /* Prevents interaction with the blurred background */
 }
 
 .header-container {
@@ -160,6 +161,121 @@
     right: 10px;
 }
 
+/* Container for buttons with padding to create a gap from the left edge */
+.button-container1 {
+    display: flex;
+    gap: 20px; /* Gap between buttons */
+    padding-left: 40px; /* Gap from the left edge of the webpage */
+}
+
+/* Styling for individual buttons */
+.custom-button {
+    position: relative;
+    width: 200px;            /* Button width */
+    height: 60px;            /* Button height */
+    background: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSLv2urW-o8VQDFDJPet-u8hZU8l8FwGsCBA&s') no-repeat center center;
+    background-size: cover;
+    border-radius: 12px;     /* Curved edges */
+    overflow: hidden;
+    cursor: pointer;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;          /* Text color */
+    font-size: 18px;
+    transition: transform 0.3s ease;
+}
+
+
+
+/* Optional overlay for better text visibility */
+.custom-button::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.4); /* Semi-transparent overlay */
+    transition: background-color 0.3s ease;
+    border-radius: 12px; /* Match button border radius */
+    z-index: 0;
+}
+
+.custom-button1 {
+    position: relative;
+    width: 200px;            /* Button width */
+    height: 60px;            /* Button height */
+    background: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQvDGXeTF43nFVl1hqYtjbqrxxY9YM8CxIaYw&s') no-repeat center center;
+    background-size: cover;
+    border-radius: 12px;     /* Curved edges */
+    overflow: hidden;
+    cursor: pointer;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;          /* Text color */
+    font-size: 18px;
+    transition: transform 0.3s ease;
+}
+
+
+
+/* Optional overlay for better text visibility */
+.custom-button1::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.4); /* Semi-transparent overlay */
+    transition: background-color 0.3s ease;
+    border-radius: 12px; /* Match button border radius */
+    z-index: 0;
+}
+
+/* Text styling */
+.button-text {
+    position: relative;
+    z-index: 1; /* Ensure text appears above the overlay */
+    colour:#fff;
+    pointer-events: none;
+    Text-decoration:none;
+}
+
+/* Hover effect */
+.custom-button:hover {
+    transform: scale(1.05); /* Slightly enlarge button on hover */
+}
+
+.custom-button:hover::before {
+    background-color: rgba(0, 0, 0, 0.6); /* Darken overlay on hover */
+}
+
+.custom-button1:hover {
+    transform: scale(1.05); /* Slightly enlarge button on hover */
+}
+
+.custom-button1:hover::before {
+    background-color: rgba(0, 0, 0, 0.6); /* Darken overlay on hover */
+}
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .button-container {
+        flex-wrap: wrap; /* Wrap buttons to the next line on small screens */
+    }
+
+    .custom-button {
+        width: 100%; /* Buttons take full width on smaller screens */
+    }
+}
+
+
 .no-results {
     text-align: center;
     font-size: 18px;
@@ -222,7 +338,19 @@
 </div>
         <button class="next" onclick="move(1)">&#9654;</button>
     </div>
-    
+<div class="button-container1">
+    <a href="syllabus.html" class="button-link">
+        <div class="custom-button">
+            <span class="button-text">Syllabus</span>
+        </div>
+    </a>
+    <a href="questionpaper.html" class="button-link">
+        <div class="custom-button1">
+            <span class="button-text">Question Papers</span>
+        </div>
+    </a>
+</div>
+ <p><br> </p>
    <div class="footer">
         <p>Web development is a crucial skill in the digital age, enabling you to create and maintain websites and applications that serve a wide array of functions—from personal blogs to complex business solutions. Mastering web development opens up numerous career opportunities and allows you to bring your ideas to life on the web.</p>
         <p>Utilize the materials provided to build a solid foundation in web technologies. Start with the basics like HTML and CSS, then advance to JavaScript and frameworks like React. Each resource is designed to guide you through various aspects of web development, helping you to gain practical experience and build a portfolio of projects.</p>
