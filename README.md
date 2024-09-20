@@ -1,6 +1,6 @@
 # Codester
 ## Project Title:
-**Web Development Learning Platform**
+**Web Technologies Materials Blogspot**
 
 ## Overview:
 A responsive website providing learning materials on HTML, CSS, JavaScript, XML, JDBC, Servlets, and JSP. It includes a search bar, a sliding button carousel for topics, and access to previous university question papers.
